@@ -8,6 +8,8 @@
 #include "CCLuaEngine.h"
 #include "utils.h"
 #include "lua_extensions.h"
+#include "MyCocos2dLua.h"
+
 
 
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32 && ANALYTICS_UMENG == 1)
@@ -98,6 +100,9 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     // register lua engine
     CCLuaEngine* pEngine = CCLuaEngine::defaultEngine();
+    lua_State *state = pEngine->getLuaStack()->getLuaState();
+    tolua_MyExt_open(state);
+
     CCScriptEngineManager::sharedManager()->setScriptEngine(pEngine);
 
 	//¼ÓÔØcjson
@@ -133,13 +138,20 @@ bool AppDelegate::applicationDidFinishLaunching()
     }*/
 #endif
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+CCLog("before to load lua file");
+CCLog("platform ");
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    CCLog("before android add search path");
 	//pEngine->addSearchPath((CCFileUtils::sharedFileUtils()->getWritablePath() + "script/").c_str());
-	CCFileUtils::sharedFileUtils()->addSearchPath((CCFileUtils::sharedFileUtils()->getWritablePath() + "script/").c_str());
-	CCString* pstrFileContent = CCString::createWithContentsOfFile("Entry");
-	CCLOG("%s","read script from phone memory");
+	//CCFileUtils::sharedFileUtils()->addSearchPath((CCFileUtils::sharedFileUtils()->getWritablePath() + "script/").c_str());
+	
+    CCString* pstrFileContent = CCString::createWithContentsOfFile("Entry");
+	
+    CCLOG("%s","read script from phone memory");
+    
     pEngine->executeString(pstrFileContent->getCString());
+    
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
     
     CCLuaStack *pStack = pEngine->getLuaStack();

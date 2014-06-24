@@ -1,8 +1,11 @@
 package com.easou.game.sghhr;
 
 import org.cocos2dx.lib.Cocos2dxActivity;
+import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.easou.game.sghhr.common.Native;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -20,6 +23,10 @@ public abstract class GameEntryBaseActivity extends Cocos2dxActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		_instance = this;
 		super.onCreate(savedInstanceState);
+		
+		
+		Native.init(this);
+		Native.setGLSurfaceView(getSurfaceView());
 	}
 
 	@Override
@@ -47,6 +54,8 @@ public abstract class GameEntryBaseActivity extends Cocos2dxActivity implements
 		builder.create();
 		builder.show();
 	}
+	
+
 	
 	public static final void startShare(final String json){
 		try {
